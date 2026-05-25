@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+:root {
+  --color-thimpson-yellow: #F4C414;
+  --color-thimpson-yellow-light: #FBC004;
+  --color-thimpson-dark: #0E0E0F;
+  --color-thimpson-dark-secondary: #1C1C1E;
+  --color-thimpson-white: #FFFFFF;
+  --color-thimpson-offwhite: #F2F2F7;
+  --color-thimpson-gray: #8E8E93;
+}
+
+.bg-thimpson-yellow { background-color: var(--color-thimpson-yellow); }
+.bg-thimpson-yellow\/5 { background-color: color-mix(in oklab, var(--color-thimpson-yellow) 5%, transparent); }
+.bg-thimpson-yellow\/10 { background-color: color-mix(in oklab, var(--color-thimpson-yellow) 10%, transparent); }
+.bg-thimpson-yellow\/20 { background-color: color-mix(in oklab, var(--color-thimpson-yellow) 20%, transparent); }
+.bg-thimpson-dark { background-color: var(--color-thimpson-dark); }
+.bg-thimpson-dark\/50 { background-color: color-mix(in oklab, var(--color-thimpson-dark) 50%, transparent); }
+.bg-thimpson-dark\/90 { background-color: color-mix(in oklab, var(--color-thimpson-dark) 90%, transparent); }
+.bg-thimpson-dark-secondary { background-color: var(--color-thimpson-dark-secondary); }
+.bg-thimpson-offwhite { background-color: var(--color-thimpson-offwhite); }
+.hover\:bg-thimpson-yellow:hover { background-color: var(--color-thimpson-yellow); }
+.hover\:bg-thimpson-dark:hover { background-color: var(--color-thimpson-dark); }
+
+.text-thimpson-yellow { color: var(--color-thimpson-yellow); }
+.text-thimpson-dark { color: var(--color-thimpson-dark); }
+.text-thimpson-gray { color: var(--color-thimpson-gray); }
+.hover\:text-thimpson-yellow:hover { color: var(--color-thimpson-yellow); }
+
+.border-thimpson-yellow { border-color: var(--color-thimpson-yellow); }
+.border-thimpson-yellow\/20 { border-color: color-mix(in oklab, var(--color-thimpson-yellow) 20%, transparent); }
+.border-thimpson-yellow\/30 { border-color: color-mix(in oklab, var(--color-thimpson-yellow) 30%, transparent); }
+.hover\:border-thimpson-yellow:hover { border-color: var(--color-thimpson-yellow); }
+
+.shadow-thimpson-yellow\/25 {
+  --tw-shadow-color: color-mix(in oklab, var(--color-thimpson-yellow) 25%, transparent);
+}
+
+.from-thimpson-dark {
+  --tw-gradient-from: var(--color-thimpson-dark);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via, var(--tw-gradient-from)), var(--tw-gradient-to);
+}
+.via-thimpson-dark-secondary { --tw-gradient-via: var(--color-thimpson-dark-secondary); }
+.to-thimpson-dark { --tw-gradient-to: var(--color-thimpson-dark); }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+.animate-slide-down { animation: slideDown 0.3s ease-out forwards; }
+.animate-scale-in { animation: scaleIn 0.3s ease-out forwards; }
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-thimpson-yellow) 40%, transparent); }
+  50% { box-shadow: 0 0 0 12px color-mix(in oklab, var(--color-thimpson-yellow) 0%, transparent); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+input, textarea, select {
+  outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-thimpson-yellow);
+}
+
+input.error, textarea.error, select.error {
+  border-color: #EF4444;
+}
+
+.step-indicator-active {
+  background-color: var(--color-thimpson-yellow);
+  color: var(--color-thimpson-dark);
+}
+
+.step-indicator-completed {
+  background-color: #22C55E;
+  color: white;
+}
+
+.step-indicator-pending {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+}
