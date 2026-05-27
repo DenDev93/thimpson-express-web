@@ -12,9 +12,9 @@ const geocode = async (address) => {
   return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), label: data[0].display_name };
 };
 
-const NIC_BOUNDS = L.latLngBounds(
-  L.latLng(10.7, -87.7),
-  L.latLng(15.1, -82.5),
+const OCOTAL_BOUNDS = L.latLngBounds(
+  L.latLng(13.55, -86.56),
+  L.latLng(13.70, -86.40),
 );
 
 const RouteMap = ({ origin, destinations = [], height = 300 }) => {
@@ -41,8 +41,9 @@ const RouteMap = ({ origin, destinations = [], height = 300 }) => {
         mapInstance = L.map(containerRef.current, {
           zoomControl: false,
           attributionControl: false,
-          maxBounds: NIC_BOUNDS,
+          maxBounds: OCOTAL_BOUNDS,
           maxBoundsViscosity: 1.0,
+          minZoom: 12,
         });
 
         const coordBounds = L.latLngBounds(coords.map(c => L.latLng(c.lat, c.lon)));

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import jsPDF from 'jspdf';
 import Swal from 'sweetalert2';
 import RouteMap from './RouteMap';
+import { saveOrder } from './OrderTracking';
 
 const BASE_FEE = 40;
 const MONEDA = 'C$';
@@ -162,13 +163,20 @@ function SmartForm({ service, onSubmit }) {
     telefono: '',
     multiStop: false,
     destinos: [],
-    esMayorEdad: false,
+    cedula: '',
+    fechaNacimiento: '',
     zona: 'urbana',
+    roundTrip: false,
   });
   const [errors, setErrors] = useState({});
   const [locating, setLocating] = useState(false);
   const costoProducto = parseFloat(form.monto_producto) || 0;
-  const total = costoProducto > 0 ? costoProducto + BASE_FEE : BASE_FEE;
+  const numDestinos = form.multiStop
+    ? form.destinos.filter(d => d.dir.trim()).length
+    : (form.destino ? 1 : 0);
+  const numCarreras = numDestinos + (form.roundTrip ? 1 : 0);
+  const totalCarreras = numCarreras * BASE_FEE;
+  const total = totalCarreras + costoProducto;
 
   const updateField = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -186,7 +194,17 @@ function SmartForm({ service, onSubmit }) {
     }
     if (step === 3 && !form.nombre) newErrors.nombre = 'Ingresa tu nombre';
     if (step === 3 && !form.telefono) newErrors.telefono = 'Ingresa tu teléfono';
-    if (step === 3 && !form.esMayorEdad) newErrors.esMayorEdad = 'Debes ser mayor de 18 años para solicitar el servicio';
+    if (step === 3 && !form.cedula) newErrors.cedula = 'Ingresa tu número de cédula';
+    if (step === 3 && form.cedula && form.cedula.replace(/[\s-]/g, '').length < 10) newErrors.cedula = 'Cédula inválida';
+    if (step === 3 && !form.fechaNacimiento) newErrors.fechaNacimiento = 'Ingresa tu fecha de nacimiento';
+    if (step === 3 && form.fechaNacimiento) {
+      const nac = new Date(form.fechaNacimiento);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nac.getFullYear();
+      const mes = hoy.getMonth() - nac.getMonth();
+      if (mes < 0 || (mes === 0 && hoy.getDate() < nac.getDate())) edad--;
+      if (edad < 18) newErrors.fechaNacimiento = 'Debes ser mayor de 18 años para solicitar el servicio';
+    }
     if (step === 3) {
       const hora = new Date().getHours();
       if (hora >= 20 && form.zona === 'periferica') {
@@ -294,9 +312,15 @@ function SmartForm({ service, onSubmit }) {
       row('Servicio:', servicesConfig[service]?.title || '');
       row('Tipo:', typeMap[service]?.find(t => t.value === form.tipo)?.label || form.tipo);
       row('Origen:', form.origen + (form.origenRef ? ` (${form.origenRef})` : ''));
-      row('Destino:', form.destino + (form.destinoRef ? ` (${form.destinoRef})` : ''));
+      if (form.multiStop) {
+        const stopsStr = form.destinos.filter(d => d.dir).map((d, i) => `${i + 1}. ${d.dir}${d.ref ? ` (${d.ref})` : ''}`).join(' | ');
+        row('Paradas:', stopsStr);
+      } else {
+        row('Destino:', form.destino + (form.destinoRef ? ` (${form.destinoRef})` : ''));
+      }
       if (form.descripcion) row('Detalle:', form.descripcion);
-      row('Carrera:', `${MONEDA}${BASE_FEE}.00`);
+      row('Carreras:', `${numCarreras} × ${MONEDA}${BASE_FEE}.00 = ${MONEDA}${totalCarreras.toFixed(2)}`);
+      if (form.roundTrip) row('Vuelta:', `${MONEDA}${BASE_FEE}.00`);
       if (cp > 0) row('Producto:', `${MONEDA}${cp.toFixed(2)}`);
 
       y += 2;
@@ -310,7 +334,9 @@ function SmartForm({ service, onSubmit }) {
       y += ln;
       pdf.setTextColor(160);
       pdf.setFontSize(8);
-      pdf.text(`${form.nombre} - ${form.telefono}`, w / 2, y, { align: 'center' });
+      pdf.text(`${form.nombre} - Cédula: ${form.cedula}`, w / 2, y, { align: 'center' });
+      y += ln;
+      pdf.text(`${form.telefono}`, w / 2, y, { align: 'center' });
       y += ln;
       pdf.text(fecha, w / 2, y, { align: 'center' });
 
@@ -326,8 +352,13 @@ function SmartForm({ service, onSubmit }) {
     const num = generateOrderNumber();
     if (!orderNumber) setOrderNumber(num);
 
-    const costoProducto = parseFloat(form.monto_producto) || 0;
-    const total = costoProducto > 0 ? costoProducto + BASE_FEE : BASE_FEE;
+    const numDestinosH = form.multiStop
+      ? form.destinos.filter(d => d.dir.trim()).length
+      : (form.destino ? 1 : 0);
+    const numCarrerasH = numDestinosH + (form.roundTrip ? 1 : 0);
+    const totalCarrerasH = numCarrerasH * BASE_FEE;
+    const costoProductoH = parseFloat(form.monto_producto) || 0;
+    const totalH = totalCarrerasH + costoProductoH;
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(form.origen)}&destination=${encodeURIComponent(form.destino)}`;
 
     const apiUrl = window.location.hostname === 'localhost'
@@ -347,15 +378,21 @@ function SmartForm({ service, onSubmit }) {
       destino_referencia: form.destinoRef,
       descripcion: form.descripcion,
       urgencia: form.urgencia,
-      monto_producto: costoProducto,
+      monto_producto: costoProductoH,
+      num_carreras: numCarrerasH,
       tarifa_carrera: BASE_FEE,
-      total: total,
+      total_carreras: totalCarrerasH,
+      round_trip: form.roundTrip,
+      total: totalH,
       moneda: MONEDA,
     };
 
     const destinosTexto = form.multiStop && form.destinos.length > 0
       ? form.destinos.filter(d => d.dir).map((d, i) => `  ${i + 1}. ${d.dir}${d.ref ? ` (${d.ref})` : ''}`).join('\n')
       : `  ${form.destino}${form.destinoRef ? ` (${form.destinoRef})` : ''}`;
+
+    const orderData = { ...body, estado: 'pendiente', tipo_servicio: config.title };
+    saveOrder(orderData);
 
     if (tipoEnvio === 'api') {
       try {
@@ -376,16 +413,19 @@ function SmartForm({ service, onSubmit }) {
       setSubmitted(true);
       setTimeout(() => descargarPDF(), 1500);
     } else {
-      const lineaPrecio = costoProducto > 0
-        ? `• Producto: ${MONEDA}${costoProducto.toFixed(2)}\n• Carrera: ${MONEDA}${BASE_FEE}.00`
-        : `• Tarifa de carrera: ${MONEDA}${BASE_FEE}.00`;
+      let detallePrecio = `• Carreras: ${numCarreras} × ${MONEDA}${BASE_FEE}.00 = ${MONEDA}${totalCarreras.toFixed(2)}`;
+      if (form.roundTrip) detallePrecio += `\n• Incluye vuelta al origen`;
+      if (costoProducto > 0) detallePrecio += `\n• Producto: ${MONEDA}${costoProducto.toFixed(2)}`;
+      const destinosTextoW = form.multiStop && form.destinos.length > 0
+        ? form.destinos.filter(d => d.dir).map((d, i) => `  ${i + 1}. ${d.dir}${d.ref ? ` (${d.ref})` : ''}`).join('\n')
+        : `  ${form.destino}${form.destinoRef ? ` (${form.destinoRef})` : ''}`;
 
       const msg = encodeURIComponent(`Hola Thimpson Express! Solicito #${num}:
 Servicio: ${config.title}
 Tipo: ${typeMap[service]?.find(t => t.value === form.tipo)?.label || form.tipo}
 Origen: ${form.origen}
-Destino: ${form.destino}
-${lineaPrecio}
+Destino${form.multiStop ? 's' : ''}: ${destinosTextoW}
+${detallePrecio}
 Total: ${MONEDA}${total.toFixed(2)}
 Pago: Efectivo
 Nombre: ${form.nombre}
@@ -393,6 +433,7 @@ Tel: ${form.telefono}
 Mapa: ${mapsUrl}`);
 
       window.open(`https://wa.me/50584159112?text=${msg}`, '_blank');
+      saveOrder(orderData);
       setSubmitted(true);
 
       try {
@@ -578,6 +619,17 @@ Mapa: ${mapsUrl}`);
                 >
                   + Agregar otra parada
                 </button>
+                <label className="flex items-center gap-3 cursor-pointer mt-2">
+                  <input
+                    type="checkbox"
+                    checked={form.roundTrip}
+                    onChange={(e) => updateField('roundTrip', e.target.checked)}
+                    className="w-4 h-4 border-gray-300 text-thimpson-yellow focus:ring-thimpson-yellow"
+                  />
+                  <span className="text-sm text-gray-600">
+                    Incluir <strong>vuelta al origen</strong> (+{MONEDA}{BASE_FEE})
+                  </span>
+                </label>
               </div>
             )}
           </div>
@@ -673,18 +725,29 @@ Mapa: ${mapsUrl}`);
                 {errors.telefono && <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>}
               </div>
             </div>
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.esMayorEdad}
-                onChange={(e) => updateField('esMayorEdad', e.target.checked)}
-                className="mt-1 w-4 h-4 border-gray-300 text-thimpson-yellow focus:ring-thimpson-yellow"
-              />
-              <span className="text-sm text-gray-600">
-                Confirmo que soy mayor de <strong>18 años</strong>
-              </span>
-            </label>
-            {errors.esMayorEdad && <p className="text-red-500 text-xs mt-1">{errors.esMayorEdad}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Número de Cédula</label>
+                <input
+                  type="text"
+                  value={form.cedula}
+                  onChange={(e) => updateField('cedula', e.target.value)}
+                  placeholder="001-123456-1234A"
+                  className={`w-full px-4 py-3 border text-sm mt-1 ${errors.cedula ? 'border-red-500' : 'border-gray-300'} focus:border-thimpson-yellow`}
+                />
+                {errors.cedula && <p className="text-red-500 text-xs mt-1">{errors.cedula}</p>}
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  value={form.fechaNacimiento}
+                  onChange={(e) => updateField('fechaNacimiento', e.target.value)}
+                  className={`w-full px-4 py-3 border text-sm mt-1 ${errors.fechaNacimiento ? 'border-red-500' : 'border-gray-300'} focus:border-thimpson-yellow`}
+                />
+                {errors.fechaNacimiento && <p className="text-red-500 text-xs mt-1">{errors.fechaNacimiento}</p>}
+              </div>
+            </div>
           </div>
         );
       case 4: {
@@ -735,7 +798,15 @@ Mapa: ${mapsUrl}`);
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="text-gray-500">Contacto</span>
-                  <span className="font-medium text-thimpson-dark">{form.nombre} - {form.telefono}</span>
+                  <span className="font-medium text-thimpson-dark">{form.nombre}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-gray-500">Cédula</span>
+                  <span className="font-medium text-thimpson-dark">{form.cedula}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-gray-500">Teléfono</span>
+                  <span className="font-medium text-thimpson-dark">{form.telefono}</span>
                 </div>
               </div>
             </div>
@@ -743,12 +814,22 @@ Mapa: ${mapsUrl}`);
             <div className="border-2 border-thimpson-yellow bg-thimpson-yellow/5 p-4">
               <h5 className="font-bold text-thimpson-dark text-sm mb-3 tracking-wider uppercase">Resumen de pago</h5>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between py-1">
-                  <span className="text-gray-600">Tarifa de carrera</span>
-                  <span className="font-bold text-thimpson-dark">{MONEDA}{BASE_FEE}.00</span>
-                </div>
-                {costoProducto > 0 && (
+                {numCarreras > 0 && (
+                  <div className="flex justify-between py-1 border-b border-thimpson-yellow/20">
+                    <span className="text-gray-600">
+                      {numCarreras} carrera{numCarreras > 1 ? 's' : ''} × {MONEDA}{BASE_FEE}
+                    </span>
+                    <span className="font-bold text-thimpson-dark">{MONEDA}{totalCarreras.toFixed(2)}</span>
+                  </div>
+                )}
+                {form.roundTrip && (
                   <div className="flex justify-between py-1">
+                    <span className="text-gray-600 text-xs italic">Incluye vuelta al origen</span>
+                    <span className="text-gray-400 text-xs">+{MONEDA}{BASE_FEE}.00</span>
+                  </div>
+                )}
+                {costoProducto > 0 && (
+                  <div className="flex justify-between py-1 border-b border-thimpson-yellow/20">
                     <span className="text-gray-600">Costo del producto</span>
                     <span className="font-medium text-thimpson-dark">{MONEDA}{costoProducto.toFixed(2)}</span>
                   </div>
@@ -824,6 +905,27 @@ Mapa: ${mapsUrl}`);
       ) : (
         <>
           <StepIndicator steps={config.steps} current={step} visited={visited} />
+
+          <div className="bg-thimpson-yellow/5 border border-thimpson-yellow/20 px-4 py-2 mb-4 flex flex-wrap items-center justify-between gap-2 text-sm">
+            <span className="text-gray-600 font-medium">
+              {numCarreras > 0 ? `${numCarreras} carrera${numCarreras > 1 ? 's' : ''}` : 'Sin rutas'}
+            </span>
+            <div className="flex items-center gap-3">
+              {numCarreras > 0 && (
+                <span className="text-gray-500">
+                  Carreras: <strong className="text-thimpson-dark">{MONEDA}{totalCarreras.toFixed(2)}</strong>
+                </span>
+              )}
+              {costoProducto > 0 && (
+                <span className="text-gray-500">
+                  Producto: <strong className="text-thimpson-dark">{MONEDA}{costoProducto.toFixed(2)}</strong>
+                </span>
+              )}
+              <span className="text-thimpson-dark font-black text-base">
+                Total: {MONEDA}{total.toFixed(2)}
+              </span>
+            </div>
+          </div>
 
           <div className="min-h-[280px]">
             {renderStep()}

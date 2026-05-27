@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ onOpenTracking }) => {
   const [open, setOpen] = useState(false);
 
   const links = [
@@ -35,6 +35,12 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
+            <button
+              onClick={onOpenTracking}
+              className="text-gray-400 hover:text-thimpson-yellow transition-colors text-sm font-medium tracking-wide uppercase"
+            >
+              📦 Seguimiento
+            </button>
             <a
               href="https://wa.me/50584159112"
               target="_blank"
@@ -72,6 +78,12 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
+              <button
+                onClick={() => { setOpen(false); onOpenTracking(); }}
+                className="text-left text-gray-400 hover:text-thimpson-yellow transition-colors py-3 text-sm font-medium tracking-wide uppercase"
+              >
+                📦 Seguimiento
+              </button>
               <a
                 href="https://wa.me/50584159112"
                 target="_blank"
