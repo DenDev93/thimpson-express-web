@@ -22,8 +22,8 @@ const testimonials = [
 const highlights = [
   { icon: '⚡', title: 'Entrega Exprés', desc: '30 minutos o menos en entregas locales' },
   { icon: '🛡️', title: 'Seguro Garantizado', desc: 'Tu paquete y tu viaje siempre protegidos' },
-  { icon: '📍', title: 'Cobertura Regional', desc: 'Nueva Segovia, Madriz y Estelí' },
-  { icon: '💬', title: 'Soporte 24/7', desc: 'Atención al cliente los 365 días del año' },
+  { icon: '📍', title: 'Cobertura Local', desc: 'Ocotal, Nueva Segovia' },
+  { icon: '💬', title: 'Soporte Directo', desc: 'Atención al cliente Lun-Dom 8AM a 10PM' },
 ];
 
 const Testimonials = () => (

@@ -28,15 +28,13 @@ const About = () => (
             seguro y confiable que supere las expectativas de nuestros clientes.
           </p>
           <p className="text-gray-500 mb-10 leading-relaxed">
-            Con base en <strong className="text-white">Ocotal, Nueva Segovia</strong>, brindamos cobertura en los departamentos de{' '}
-            <strong className="text-thimpson-yellow">Nueva Segovia</strong>,{' '}
-            <strong className="text-thimpson-yellow">Madriz</strong> y{' '}
-            <strong className="text-thimpson-yellow">Estelí</strong>.
+            Con base en <strong className="text-white">Ocotal, Nueva Segovia</strong>. Por el momento solo{' '}
+            <strong className="text-thimpson-yellow">atendemos en Ocotal</strong>.
             Contamos con un equipo de profesionales y una flota moderna lista 
             para atender todas tus necesidades de delivery, transporte, encomiendas y mandados.
           </p>
           <a
-            href="https://wa.me/584143443746"
+            href="https://wa.me/50584159112"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-thimpson-yellow text-thimpson-dark font-bold px-6 py-3 text-sm hover:brightness-110 transition-all duration-300 tracking-wide"

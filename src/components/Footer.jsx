@@ -41,7 +41,7 @@ const Footer = () => (
               </a>
             </li>
             <li className="text-gray-400">Lun-Dom 8:00 AM - 10:00 PM</li>
-            <li className="text-gray-400">Nueva Segovia · Madriz · Estelí</li>
+            <li className="text-gray-400">Ocotal, Nueva Segovia</li>
           </ul>
         </div>
       </div>

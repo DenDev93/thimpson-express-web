@@ -29,7 +29,7 @@ const Hero = () => (
             Soluciones de movilidad inteligente para lo que necesites, cuando lo necesites.
           </p>
           <p className="text-thimpson-gray text-sm mb-10 font-medium">
-            📍 Ocotal, Nueva Segovia — Servicio en <span className="text-thimpson-yellow">Nueva Segovia</span>, <span className="text-thimpson-yellow">Madriz</span> y <span className="text-thimpson-yellow">Estelí</span>
+            📍 Ocotal, Nueva Segovia — Servicio disponible solo en <span className="text-thimpson-yellow">Ocotal</span> por el momento
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-16">

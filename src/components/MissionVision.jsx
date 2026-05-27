@@ -24,8 +24,8 @@ const MissionVision = () => (
             <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Misión</h3>
             <div className="w-10 h-0.5 bg-thimpson-yellow mb-6" />
             <p className="text-gray-300 leading-relaxed">
-              Brindar soluciones de movilidad y delivery rápidas, seguras y confiables en los departamentos de 
-              Nueva Segovia, Madriz y Estelí, superando las expectativas de nuestros clientes con un servicio 
+              Brindar soluciones de movilidad y delivery rápidas, seguras y confiables en 
+              Ocotal, Nueva Segovia, superando las expectativas de nuestros clientes con un servicio 
               de excelencia, innovación constante y un equipo comprometido con la satisfacción de cada usuario.
             </p>
           </div>

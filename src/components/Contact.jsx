@@ -52,7 +52,7 @@ const Contact = ({ children }) => (
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Ubicación</p>
                 <p className="text-thimpson-dark font-medium">Ocotal, Nueva Segovia, Nicaragua</p>
-                <p className="text-thimpson-gray text-xs mt-0.5">Cobertura: Nueva Segovia · Madriz · Estelí</p>
+                <p className="text-thimpson-gray text-xs mt-0.5">Por el momento solo atendemos en Ocotal, Nueva Segovia</p>
               </div>
             </div>
 
