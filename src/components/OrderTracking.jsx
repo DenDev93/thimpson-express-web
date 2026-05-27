@@ -66,7 +66,7 @@ const OrderTracking = ({ onClose }) => {
                 type="text"
                 value={searchNum}
                 onChange={(e) => setSearchNum(e.target.value)}
-                placeholder="Ej: TEX-12345678"
+                placeholder="Ej: ORD-123456"
                 className="flex-1 px-4 py-3 border border-gray-300 text-sm focus:border-thimpson-yellow text-center font-bold uppercase"
               />
               <button

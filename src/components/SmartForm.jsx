@@ -138,10 +138,8 @@ const StepIndicator = ({ steps, current, visited }) => (
 );
 
 const generateOrderNumber = () => {
-  const prefix = 'TEX';
   const nums = Date.now().toString().slice(-6);
-  const rand = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-  return `${prefix}-${nums}${rand}`;
+  return `ORD-${nums}`;
 };
 
 function SmartForm({ service, onSubmit }) {
