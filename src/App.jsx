@@ -12,10 +12,14 @@ import Footer from './components/Footer'
 import Modal from './components/Modal'
 import BackToTop from './components/BackToTop'
 import SmartForm from './components/SmartForm'
+import emailjs from '@emailjs/browser'
+
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
 
 const pageTitle = {
   delivery: 'Solicitar Delivery Express',
-  viaje: 'Solicitar Viaje Privado',
   encomienda: 'Solicitar Encomienda',
   mandado: 'Solicitar Mandado',
 };
@@ -23,10 +27,57 @@ const pageTitle = {
 const App = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [pendingService, setPendingService] = useState(null);
+  const [subscribeFirst, setSubscribeFirst] = useState(false);
+  const [subEmail, setSubEmail] = useState('');
+  const [subStatus, setSubStatus] = useState('idle');
+  const [subMessage, setSubMessage] = useState('');
 
   const handleRequestService = (serviceId) => {
-    setSelectedService(serviceId);
-    setModalOpen(true);
+    const subscribed = localStorage.getItem('thimpson_subscribed');
+    if (subscribed) {
+      setSelectedService(serviceId);
+      setModalOpen(true);
+    } else {
+      setPendingService(serviceId);
+      setSubscribeFirst(true);
+      setModalOpen(true);
+    }
+  };
+
+  const handleSubscribeFirst = async (e) => {
+    e.preventDefault();
+    if (!subEmail) return;
+    setSubStatus('loading');
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        { email: subEmail, source: 'preservice_thimpson' },
+        EMAILJS_PUBLIC_KEY
+      );
+    } catch {}
+    localStorage.setItem('thimpson_subscribed', 'true');
+    setSubStatus('success');
+    setSubMessage('¡Gracias por suscribirte!');
+    setTimeout(() => {
+      setSubscribeFirst(false);
+      setSelectedService(pendingService);
+      setPendingService(null);
+      setSubEmail('');
+      setSubStatus('idle');
+      setSubMessage('');
+    }, 1500);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setSubscribeFirst(false);
+    setPendingService(null);
+    setSelectedService(null);
+    setSubEmail('');
+    setSubStatus('idle');
+    setSubMessage('');
   };
 
   return (
@@ -46,14 +97,51 @@ const App = () => {
 
       <Modal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={selectedService ? pageTitle[selectedService] : ''}
+        onClose={handleClose}
+        title={subscribeFirst ? 'Suscríbete para continuar' : (selectedService ? pageTitle[selectedService] : '')}
       >
-        {selectedService && (
-          <SmartForm
-            service={selectedService}
-            onSubmit={() => setModalOpen(false)}
-          />
+        {subscribeFirst ? (
+          <div className="animate-slide-up text-center py-4">
+            <div className="w-16 h-16 bg-thimpson-yellow/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">📧</span>
+            </div>
+            <h3 className="text-xl font-bold text-thimpson-dark mb-2">Antes de solicitar el servicio...</h3>
+            <p className="text-gray-500 text-sm mb-6">
+              Suscríbete a nuestro newsletter para recibir ofertas y novedades. ¡Es rápido y sin compromiso!
+            </p>
+            <form onSubmit={handleSubscribeFirst} className="max-w-sm mx-auto">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
+                  placeholder="tu@correo.com"
+                  required
+                  className="flex-1 px-4 py-3 border border-gray-300 text-sm focus:border-thimpson-yellow"
+                />
+                <button
+                  type="submit"
+                  disabled={subStatus === 'loading'}
+                  className="px-6 py-3 bg-thimpson-yellow text-thimpson-dark font-bold text-sm hover:brightness-110 transition-all disabled:opacity-50"
+                >
+                  {subStatus === 'loading' ? 'Enviando...' : 'Suscribirme'}
+                </button>
+              </div>
+            </form>
+            {subMessage && (
+              <p className="text-green-600 text-sm mt-3">{subMessage}</p>
+            )}
+            <p className="text-gray-400 text-xs mt-4">
+              Sin spam. Puedes darte de baja en cualquier momento.
+            </p>
+          </div>
+        ) : (
+          selectedService && (
+            <SmartForm
+              service={selectedService}
+              onSubmit={() => setModalOpen(false)}
+            />
+          )
         )}
       </Modal>
     </div>

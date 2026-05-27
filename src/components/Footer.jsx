@@ -13,15 +13,15 @@ const Footer = () => (
             </div>
           </div>
           <p className="text-gray-500 text-sm max-w-md leading-relaxed">
-            Servicio de delivery, transporte privado, encomiendas y mandados. 
-            Rápido, seguro y confiable. Disponibles 24/7 para ti.
+             Servicio de delivery, encomiendas y mandados. 
+            Rápido, seguro y confiable. Disponibles de Lunes a Domingo 8:00 AM - 10:00 PM.
           </p>
         </div>
 
         <div>
           <h4 className="text-white font-bold text-sm tracking-wider uppercase mb-5">Servicios</h4>
           <ul className="space-y-3">
-            {['Delivery Express', 'Viajes Privados', 'Encomiendas', 'Mandados'].map((s) => (
+            {['Delivery Express', 'Encomiendas', 'Mandados'].map((s) => (
               <li key={s} className="text-gray-400 text-sm hover:text-thimpson-yellow transition-colors cursor-pointer">{s}</li>
             ))}
           </ul>
@@ -31,11 +31,16 @@ const Footer = () => (
           <h4 className="text-white font-bold text-sm tracking-wider uppercase mb-5">Contacto</h4>
           <ul className="space-y-3 text-sm">
             <li>
-              <a href="https://wa.me/584143443746" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-thimpson-yellow transition-colors">
-                +58 414-3443746
+              <a href="https://wa.me/50584159112" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-thimpson-yellow transition-colors">
+                Claro: +505 8415-9112
               </a>
             </li>
-            <li className="text-gray-400">24 horas, 7 días</li>
+            <li>
+              <a href="https://wa.me/50585932295" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-thimpson-yellow transition-colors">
+                Tigo: +505 8593-2295
+              </a>
+            </li>
+            <li className="text-gray-400">Lun-Dom 8:00 AM - 10:00 PM</li>
             <li className="text-gray-400">Nueva Segovia · Madriz · Estelí</li>
           </ul>
         </div>

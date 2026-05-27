@@ -31,9 +31,14 @@ const Contact = ({ children }) => (
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono / WhatsApp</p>
-                <a href="https://wa.me/584143443746" target="_blank" rel="noopener noreferrer" className="text-thimpson-yellow font-bold text-lg hover:underline">
-                  +58 414-3443746
-                </a>
+                <div className="flex flex-col gap-0.5">
+                  <a href="https://wa.me/50584159112" target="_blank" rel="noopener noreferrer" className="text-thimpson-yellow font-bold text-lg hover:underline">
+                    Claro: +505 8415-9112
+                  </a>
+                  <a href="https://wa.me/50585932295" target="_blank" rel="noopener noreferrer" className="text-thimpson-yellow font-bold text-lg hover:underline">
+                    Tigo: +505 8593-2295
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -59,7 +64,7 @@ const Contact = ({ children }) => (
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Horario</p>
-                <p className="text-thimpson-dark font-medium">Lunes a Domingo - 24/7</p>
+                <p className="text-thimpson-dark font-medium">Lunes a Domingo - 8:00 AM a 10:00 PM</p>
               </div>
             </div>
           </div>
@@ -89,7 +94,7 @@ const Contact = ({ children }) => (
           </div>
 
           <a
-            href="https://wa.me/584143443746"
+            href="https://wa.me/50584159112"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full inline-flex items-center justify-center gap-3 bg-thimpson-yellow text-thimpson-dark font-bold px-8 py-4 text-lg hover:brightness-110 transition-all duration-300 shadow-lg shadow-thimpson-yellow/25"

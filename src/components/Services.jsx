@@ -7,14 +7,14 @@ const services = [
     features: ['30 min o menos', 'Seguimiento en tiempo real', 'Cobertura total'],
     gradient: 'from-thimpson-yellow/20 to-transparent',
   },
-  {
-    id: 'viaje',
-    icon: '🚗',
-    title: 'Viajes Privados',
-    desc: 'Transporte cómodo y seguro. Solicita tu viaje desde cualquier lugar.',
-    features: ['Vehículos cómodos', 'Conductores verificados', 'Precios justos'],
-    gradient: 'from-thimpson-yellow/20 to-transparent',
-  },
+  // {
+  //   id: 'viaje',
+  //   icon: '🚗',
+  //   title: 'Viajes Privados',
+  //   desc: 'Transporte cómodo y seguro. Solicita tu viaje desde cualquier lugar.',
+  //   features: ['Vehículos cómodos', 'Conductores verificados', 'Precios justos'],
+  //   gradient: 'from-thimpson-yellow/20 to-transparent',
+  // },
   {
     id: 'encomienda',
     icon: '📦',
@@ -31,14 +31,14 @@ const services = [
     features: ['Compra asistida', 'Pago en efectivo', 'Entrega inmediata'],
     gradient: 'from-thimpson-yellow/20 to-transparent',
   },
-  {
-    id: 'transporte',
-    icon: '🏍️',
-    title: 'Transporte',
-    desc: 'Te recogemos y llevamos a tu destino en moto. Rápido y económico.',
-    features: ['Punto a punto', 'Múltiples paradas', 'Ida y vuelta'],
-    gradient: 'from-thimpson-yellow/20 to-transparent',
-  },
+  // {
+  //   id: 'transporte',
+  //   icon: '🏍️',
+  //   title: 'Transporte',
+  //   desc: 'Te recogemos y llevamos a tu destino en moto. Rápido y económico.',
+  //   features: ['Punto a punto', 'Múltiples paradas', 'Ida y vuelta'],
+  //   gradient: 'from-thimpson-yellow/20 to-transparent',
+  // },
 ];
 
 const Services = ({ onRequestService }) => (

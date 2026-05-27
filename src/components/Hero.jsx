@@ -9,7 +9,7 @@ const Hero = () => (
         <div className="animate-slide-up">
           <div className="inline-flex items-center gap-2 bg-thimpson-yellow/10 border border-thimpson-yellow/30 px-3 py-1.5 mb-8">
             <span className="w-1.5 h-1.5 bg-thimpson-yellow" />
-            <span className="text-thimpson-yellow text-xs font-semibold tracking-widest uppercase">Disponible 24/7</span>
+            <span className="text-thimpson-yellow text-xs font-semibold tracking-widest uppercase">Disponible 8:00 AM - 10:00 PM</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[0.9] mb-4">
@@ -34,7 +34,7 @@ const Hero = () => (
 
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
             <a
-              href="https://wa.me/584143443746"
+              href="https://wa.me/50584159112"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-3 bg-thimpson-yellow text-thimpson-dark font-bold px-8 py-4 text-lg hover:brightness-110 transition-all duration-300 shadow-lg shadow-thimpson-yellow/25 animate-pulse-glow"
@@ -55,7 +55,7 @@ const Hero = () => (
             {[
               { value: '+500', label: 'Viajes Completados' },
               { value: '100%', label: 'Clientes Satisfechos' },
-              { value: '24/7', label: 'Disponibilidad' },
+              { value: '14 hrs', label: 'Disponibilidad' },
             ].map((stat) => (
               <div key={stat.label}>
                 <p className="text-thimpson-yellow text-3xl sm:text-4xl font-black">{stat.value}</p>
@@ -83,7 +83,6 @@ const Hero = () => (
               <div className="space-y-3">
                 {[
                   { icon: '🛵', label: 'Delivery Express', badge: '15-30 min' },
-                  { icon: '🚗', label: 'Viaje Privado', badge: 'Al instante' },
                   { icon: '📦', label: 'Encomiendas', badge: 'Seguro' },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center justify-between bg-thimpson-dark/50 px-4 py-3">

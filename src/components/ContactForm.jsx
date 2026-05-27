@@ -145,7 +145,7 @@ const ContactForm = () => {
       <div className="mt-8 pt-6 border-t border-gray-200 text-center">
         <p className="text-gray-500 text-sm mb-3">¿Prefieres contactarnos directamente?</p>
         <a
-          href="https://wa.me/584143443746"
+          href="https://wa.me/50584159112"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-thimpson-yellow text-thimpson-dark font-bold px-6 py-3 text-sm hover:brightness-110 transition-all"

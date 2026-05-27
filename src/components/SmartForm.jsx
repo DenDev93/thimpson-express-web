@@ -16,15 +16,15 @@ const servicesConfig = {
       { id: 'confirmar', label: 'Confirmar' },
     ],
   },
-  viaje: { title: 'Viaje Privado', emoji: '🚗', color: 'bg-thimpson-yellow',
-    steps: [
-      { id: 'tipo', label: 'Tipo de viaje' },
-      { id: 'origen', label: 'Origen' },
-      { id: 'destino', label: 'Destino' },
-      { id: 'detalles', label: 'Detalles' },
-      { id: 'confirmar', label: 'Confirmar' },
-    ],
-  },
+  // viaje: { title: 'Viaje Privado', emoji: '🚗', color: 'bg-thimpson-yellow',
+  //   steps: [
+  //     { id: 'tipo', label: 'Tipo de viaje' },
+  //     { id: 'origen', label: 'Origen' },
+  //     { id: 'destino', label: 'Destino' },
+  //     { id: 'detalles', label: 'Detalles' },
+  //     { id: 'confirmar', label: 'Confirmar' },
+  //   ],
+  // },
   encomienda: { title: 'Encomiendas', emoji: '📦', color: 'bg-thimpson-yellow',
     steps: [
       { id: 'tipo', label: 'Tipo de paquete' },
@@ -43,15 +43,15 @@ const servicesConfig = {
       { id: 'confirmar', label: 'Confirmar' },
     ],
   },
-  transporte: { title: 'Transporte', emoji: '🏍️', color: 'bg-thimpson-yellow',
-    steps: [
-      { id: 'tipo', label: 'Tipo de transporte' },
-      { id: 'origen', label: 'Origen' },
-      { id: 'destino', label: 'Destino' },
-      { id: 'detalles', label: 'Detalles' },
-      { id: 'confirmar', label: 'Confirmar' },
-    ],
-  },
+  // transporte: { title: 'Transporte', emoji: '🏍️', color: 'bg-thimpson-yellow',
+  //   steps: [
+  //     { id: 'tipo', label: 'Tipo de transporte' },
+  //     { id: 'origen', label: 'Origen' },
+  //     { id: 'destino', label: 'Destino' },
+  //     { id: 'detalles', label: 'Detalles' },
+  //     { id: 'confirmar', label: 'Confirmar' },
+  //   ],
+  // },
 };
 
 const deliveryTypes = [
@@ -62,12 +62,12 @@ const deliveryTypes = [
   { value: 'otro', label: 'Otro' },
 ];
 
-const viajeTypes = [
-  { value: 'inmediato', label: 'Viaje inmediato' },
-  { value: 'programado', label: 'Viaje programado' },
-  { value: 'aeropuerto', label: 'Traslado al aeropuerto' },
-  { value: 'evento', label: 'Evento especial' },
-];
+// const viajeTypes = [
+//   { value: 'inmediato', label: 'Viaje inmediato' },
+//   { value: 'programado', label: 'Viaje programado' },
+//   { value: 'aeropuerto', label: 'Traslado al aeropuerto' },
+//   { value: 'evento', label: 'Evento especial' },
+// ];
 
 const encomiendaTypes = [
   { value: 'sobre', label: 'Sobre / Documentos' },
@@ -85,18 +85,18 @@ const mandadoTypes = [
   { value: 'otro', label: 'Otro' },
 ];
 
-const transporteTypes = [
-  { value: 'punto_a_punto', label: 'Punto A → Punto B' },
-  { value: 'multi_parada', label: 'Múltiples paradas' },
-  { value: 'vuelta', label: 'Ida y Vuelta' },
-];
+// const transporteTypes = [
+//   { value: 'punto_a_punto', label: 'Punto A → Punto B' },
+//   { value: 'multi_parada', label: 'Múltiples paradas' },
+//   { value: 'vuelta', label: 'Ida y Vuelta' },
+// ];
 
 const typeMap = {
   delivery: deliveryTypes,
-  viaje: viajeTypes,
+  // viaje: viajeTypes,
   encomienda: encomiendaTypes,
   mandado: mandadoTypes,
-  transporte: transporteTypes,
+  // transporte: transporteTypes,
 };
 
 const getCurrentLocation = () => {
@@ -162,6 +162,8 @@ function SmartForm({ service, onSubmit }) {
     telefono: '',
     multiStop: false,
     destinos: [],
+    esMayorEdad: false,
+    zona: 'urbana',
   });
   const [errors, setErrors] = useState({});
   const [locating, setLocating] = useState(false);
@@ -184,6 +186,13 @@ function SmartForm({ service, onSubmit }) {
     }
     if (step === 3 && !form.nombre) newErrors.nombre = 'Ingresa tu nombre';
     if (step === 3 && !form.telefono) newErrors.telefono = 'Ingresa tu teléfono';
+    if (step === 3 && !form.esMayorEdad) newErrors.esMayorEdad = 'Debes ser mayor de 18 años para solicitar el servicio';
+    if (step === 3) {
+      const hora = new Date().getHours();
+      if (hora >= 20 && form.zona === 'periferica') {
+        newErrors.zona = 'No podemos atender áreas periféricas después de las 8:00 PM';
+      }
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -383,7 +392,7 @@ Nombre: ${form.nombre}
 Tel: ${form.telefono}
 Mapa: ${mapsUrl}`);
 
-      window.open(`https://wa.me/584143443746?text=${msg}`, '_blank');
+      window.open(`https://wa.me/50584159112?text=${msg}`, '_blank');
       setSubmitted(true);
 
       try {
@@ -621,6 +630,25 @@ Mapa: ${mapsUrl}`);
                 ))}
               </div>
             </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Zona</label>
+              <div className="flex gap-2 mt-1">
+                {[{ value: 'urbana', label: 'Urbana' }, { value: 'periferica', label: 'Periférica' }].map((z) => (
+                  <button
+                    key={z.value}
+                    onClick={() => updateField('zona', z.value)}
+                    className={`flex-1 py-3 border text-sm font-medium transition-all ${
+                      form.zona === z.value
+                        ? 'bg-thimpson-yellow/10 border-thimpson-yellow text-thimpson-dark'
+                        : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                    }`}
+                  >
+                    {z.label}
+                  </button>
+                ))}
+              </div>
+              {errors.zona && <p className="text-red-500 text-xs mt-2">{errors.zona}</p>}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tu nombre</label>
@@ -645,6 +673,18 @@ Mapa: ${mapsUrl}`);
                 {errors.telefono && <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>}
               </div>
             </div>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.esMayorEdad}
+                onChange={(e) => updateField('esMayorEdad', e.target.checked)}
+                className="mt-1 w-4 h-4 border-gray-300 text-thimpson-yellow focus:ring-thimpson-yellow"
+              />
+              <span className="text-sm text-gray-600">
+                Confirmo que soy mayor de <strong>18 años</strong>
+              </span>
+            </label>
+            {errors.esMayorEdad && <p className="text-red-500 text-xs mt-1">{errors.esMayorEdad}</p>}
           </div>
         );
       case 4: {
